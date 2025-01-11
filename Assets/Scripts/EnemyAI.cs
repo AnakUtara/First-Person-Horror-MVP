@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -17,7 +18,7 @@ public class EnemyAI : MonoBehaviour
     void Update()
     {
         _distanceToTarget = Vector3.Distance(target.position, transform.position);
-        if (_distanceToTarget <= chaseRadius)
+        if (_distanceToTarget < chaseRadius)
         {
             agent.isStopped = true;
         }
@@ -26,5 +27,12 @@ public class EnemyAI : MonoBehaviour
             agent.isStopped = false;
             agent.SetDestination(target.position);
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, chaseRadius);
+        Gizmos.color = Color.yellow;
     }
 }

@@ -4,16 +4,29 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 5f;
+    [Header("Movement")]
+    [SerializeField] private float walkSpeed = 5f;
+    [SerializeField] private float runSpeed = 10f;
+    [SerializeField] private float smoothTime = 5f;
+    [SerializeField] private float jumpHeight = 3f;
+    private float _currentSpeed;
+    private float _targetSpeed;
+    private Vector3 _velocity;
+    
     [SerializeField] private CharacterController controller;
+    
+    [Header("Ground Settings")]
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundDistance = 0.4f;
     [SerializeField] private LayerMask groundMask;
-    [SerializeField] private float jumpHeight = 3f;
-    private Vector3 _velocity;
+    
     private readonly float _gravity = Physics.gravity.y * 5;
     private bool _isGrounded;
 
+    void Start()
+    {
+        _currentSpeed = walkSpeed;
+    }
     // Update is called once per frame
     void Update()
     {
@@ -32,9 +45,15 @@ public class PlayerMovement : MonoBehaviour
         float z = Input.GetAxis("Vertical");
         
         // Calculate movement direction based on local player's transform axes (right and forward).
-        Vector3 move = transform.right * x + transform.forward * z;
+        Vector3 direction = transform.right * x + transform.forward * z;
+
+        // Conditionally change target speed by checking if player is holding Left Shift
+        _targetSpeed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
+        
+        _currentSpeed = Mathf.Lerp(_currentSpeed, _targetSpeed, smoothTime * Time.deltaTime);
+        
         // Move the player using the calculated direction, speed, and frame time.
-        controller.Move(move * (moveSpeed * Time.deltaTime));
+        controller.Move(direction.normalized * (_currentSpeed * Time.deltaTime));
         
         // Check for jump input when the player is grounded.
         // Calculate upward velocity using jump height and gravity (v = √(2 * g * h)).
