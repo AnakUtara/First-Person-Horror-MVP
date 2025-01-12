@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -7,16 +8,16 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private Transform target;
     [SerializeField] private Transform[] patrolPoints;
     [SerializeField] private NavMeshAgent agent;
-    [SerializeField] private float startWaitTime = 5f;
+    [SerializeField] private float waitTime = 5f;
     [SerializeField] private float chaseRadius;
     private float _distanceToTarget;
     private int _currentPatrolPointIndex;
-    private float _waitTime;
+    private bool _isWaiting;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        _waitTime = startWaitTime;
-    }
+    // void Start()
+    // {
+    //
+    // }
 
     // Update is called once per frame
     void Update()
@@ -37,30 +38,18 @@ public class EnemyAI : MonoBehaviour
         agent.speed = 5f;
         //Make agent move to assigned destination by default
         agent.SetDestination(patrolPoints[_currentPatrolPointIndex].position);
-        //Check if agent has finished calculating path and if remaining distance is less than equal to stop at target distance
-        //Make stop area a little bit larger by adding 0.5f to stop distance
-        if(!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance + 0.5f)
+        
+        //Make sure pathfinding and coroutine execution only when is waiting state is false.
+        //It's to avoid over-execution of coroutine during frame updates.
+        if (_isWaiting == false)
         {
-            //If wait time has done
-            if (_waitTime <= 0)
+            //Check if agent has finished calculating path and if remaining distance is less than equal to stop at target distance
+            //Make stop area a little bit larger by adding 0.5f to stop distance
+            if(!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance + 0.5f)
             {
-                //Increment Patrol Point Index to move agent to next point
-                //Modulo index by the total number of points to move agent back to starting point once finish visited all points
-                _currentPatrolPointIndex = (_currentPatrolPointIndex + 1) % patrolPoints.Length;
-                //Reset wait time
-                _waitTime = startWaitTime;
-                agent.isStopped = false;
-            }
-            else
-            {
-                agent.isStopped = true;
-                //Decrement wait time per second of game time to stop agent for start wait time amount of seconds
-                //to simulate agent waiting to search upon reaching patrol point
-                _waitTime -= Time.deltaTime;
+                StartCoroutine(WaitAtPatrolPoint());
             }
         }
-        // Debug.Log($"Moving to patrol point: {_currentPatrolPointIndex}");
-        // Debug.Log($"Wait time: {_waitTime}");
     }
 
     private void Chase()
@@ -75,5 +64,21 @@ public class EnemyAI : MonoBehaviour
             agent.isStopped = false;
             agent.SetDestination(target.position);
         }
+    }
+
+    private IEnumerator WaitAtPatrolPoint()
+    {
+        //Set is waiting state to true
+        _isWaiting = true;
+        //Stop agent from moving
+        agent.isStopped = true;
+        //Wait for (waitTime)th of second
+        yield return new WaitForSeconds(waitTime);
+        //Modulo index by the total number of points to move agent back to starting point once finish visited all points
+        _currentPatrolPointIndex = (_currentPatrolPointIndex + 1) % patrolPoints.Length;
+        //Allow agent to move
+        agent.isStopped = false;
+        //Set is waiting state to false, initiate wait loop
+        _isWaiting = false;
     }
 }
