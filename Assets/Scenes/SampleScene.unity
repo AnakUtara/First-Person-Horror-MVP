@@ -655,7 +655,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb245f81d5ad340d3860a715c554bf89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 8
+  walkSpeed: 6
   runSpeed: 15
   smoothTime: 0.5
   jumpHeight: 5
@@ -866,6 +866,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac93a24cf73ab481f8ee4df0abb7c9c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  visionTarget: {fileID: 659632808}
   viewRadius: 30
   viewAngle: 90
   obstacleLayer:
@@ -874,6 +875,7 @@ MonoBehaviour:
   targetLayer:
     serializedVersion: 2
     m_Bits: 64
+  isPlayerVisible: 0
 --- !u!1001 &819422226
 PrefabInstance:
   m_ObjectHideFlags: 0
