@@ -704,6 +704,7 @@ GameObject:
   - component: {fileID: 815642460}
   - component: {fileID: 815642463}
   - component: {fileID: 815642464}
+  - component: {fileID: 815642465}
   m_Layer: 7
   m_Name: Enemy
   m_TagString: Untagged
@@ -851,8 +852,28 @@ MonoBehaviour:
   - {fileID: 1193872731}
   - {fileID: 1210194257}
   agent: {fileID: 815642463}
-  startWaitTime: 5
+  waitTime: 5
   chaseRadius: 8
+--- !u!114 &815642465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 815642458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac93a24cf73ab481f8ee4df0abb7c9c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewRadius: 30
+  viewAngle: 90
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1001 &819422226
 PrefabInstance:
   m_ObjectHideFlags: 0
