@@ -78,6 +78,8 @@ namespace Player
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(groundCheck.position, groundDistance);
             Gizmos.color = Color.green;
+            Gizmos.DrawLine(groundCheck.position, groundCheck.position + Vector3.down * groundDistance);
+            Gizmos.color = Color.green;
         }
     }
 }

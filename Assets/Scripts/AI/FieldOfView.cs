@@ -59,7 +59,6 @@ namespace AI
             {
                 isPlayerVisible = false;
             }
-            Debug.Log($"Player is visible: {isPlayerVisible}");
         }
         
         private IEnumerator FieldOfViewRoutine()
